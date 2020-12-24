@@ -2,7 +2,6 @@
 section .text
 
 read_string:
-
     mov     r8, rdx
     xor     rax, rax
 
@@ -34,6 +33,16 @@ read_ch:
     pop     rax
     ret
 
+print_char:
+    push    rdi ; push rdi since it's a caller-saved register
+    mov     rdi, rsp ;  copy stackpointer to rdi, for function arg
+    call    print_string ; print char
+    pop     rdi ; pop rdi from stack
+    ret
+print_newline:
+    mov     rdi, 10
+    call    print_char
+    ret
 
 
 string_length:
@@ -76,4 +85,5 @@ exit:
     mov rax, 60 ; exit syscall code
     syscall ; arg is exit code, rdi
     ret 
+
 
