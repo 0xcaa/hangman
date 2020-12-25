@@ -1,4 +1,3 @@
-;%include "lib.inc"
 %include "mylib.inc"
 %include "hangmanart.inc"
 
@@ -7,7 +6,7 @@
 global _start
 
 section .data
-ground:      db        "----------------------------------------------------------------------------------",10,0
+;ground:      db        "----------------------------------------------------------------------------------",10,0
 start_msg:   db        "Hangman! type a word to guess: ",10,0
 guess_msg:   db        "Guess a letter or whole word: ",0
 win_msg:     db        "You win!!",10,0
@@ -19,17 +18,19 @@ guess:          times word_len db '_'
 section .text
 
 _start:
-    mov     rdi, ground
-    call    print_string
+    ;mov     rdi, ground
+    ;call    print_string
     mov     rdi, start_msg
     call    print_string
 
     ; get password
     xor     rsi, rsi
-    mov     rdi, rsp
     mov     rdi, password
     mov     rdx, word_len
     call    read_string
+
+    mov     rdi, password
+    call    string_length
 
     ;print empty hangman
     xor     rcx, rcx
@@ -49,10 +50,32 @@ _start:
     .l1:
         mov     rdi, guess_msg
         call    print_string
-        call    read_ch
 
+        ; get guess word
+        xor     rsi, rsi
+        sub     rsp, 30
+        mov     rdi, rsp
+        mov     rdx, 30
+        call    read_string
+        mov     rdi, rax
+        push    rdi
+        call    print_string
+        ;add     rsp,30
+
+        pop     rdi
+        cmp     byte[rdi+2], 0
+        jne     .word
+        mov     al, byte[rdi]
         call    check
+        jmp     .hangman_art
 
+        .word:
+        call    check_word
+        cmp     rax, 1
+        je      .game_win
+        add     rsp, 30
+
+        .hangman_art:
         cmp     r8, 0
         je      .l4
         .l3:
@@ -60,12 +83,13 @@ _start:
         call    print_newline
         mov     rdi, guess
         call    print_string
-        call    print_newline
+        ;call    print_newline
 
         mov     rdi, guess
         mov     rsi, password
         call    string_equals
         cmp     rax, 1
+        
         je      .game_win
 
     jmp .l1
@@ -78,7 +102,6 @@ _start:
         je      .game_lose
         jmp     .l3
 
-        
 
     .game_lose:
         mov     rdi, lose_msg
@@ -92,7 +115,11 @@ _start:
     call    exit
 
 
+        
+
+
 check:
+
     xor     rcx, rcx
     xor     r8, r8
     .l1:
@@ -117,7 +144,26 @@ check:
     .end:
         ret
 
+    .end2:
+        mov     rax, 1
+        ret
+
+check_word:
+    mov     rsi, password
+    call    string_equals
+    cmp     rax, 1
+    je      .end
+
+    .end2:
+    xor     rax, rax
+    ret
+
+    .end:
+    mov     rax, 1
+    ret
+
+
+
 ;to-do
 ;see if i can fix the overflow thing when entering a string >30btyes
-; fix the double printing of guess_msg
-; be able to guess thw whole word, change read_char for read string
+;clean

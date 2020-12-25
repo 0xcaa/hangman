@@ -14,13 +14,9 @@ read_string:
         sub     rsi, rax
         ;sub     rsi, 1
 
-        mov     rax, rsi
+        mov     rax, rsi ; returs buffer in rax
 
         ret
-
-        ;cmp     ecx, r8
-        ;je      .end
-        ;jmp     .l1
 
 
 read_ch:

@@ -62,7 +62,7 @@ hangman_6:  db  "==========",10
             db  " / \  |  ",10
             db  "      |  ",10
             db  "==========",10
-            db  " GAME OVER!",10,0
+            db  "GAME OVER!",10,0
 
 
 section .text
