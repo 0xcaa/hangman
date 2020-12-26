@@ -1,12 +1,11 @@
 %include "mylib.inc"
-%include "hangmanart.inc"
+%include "art.inc"
 
 %define word_len 30
 
 global _start
 
 section .data
-;ground:      db        "----------------------------------------------------------------------------------",10,0
 start_msg:   db        "Hangman! type a word to guess: ",10,0
 guess_msg:   db        "Guess a letter or whole word: ",0
 win_msg:     db        "You win!!",10,0
@@ -18,8 +17,6 @@ guess:          times word_len db '_'
 section .text
 
 _start:
-    ;mov     rdi, ground
-    ;call    print_string
     mov     rdi, start_msg
     call    print_string
 
@@ -28,6 +25,7 @@ _start:
     mov     rdi, password
     mov     rdx, word_len
     call    read_string
+    call    clear_screen
 
     mov     rdi, password
     call    string_length
@@ -58,11 +56,7 @@ _start:
         mov     rdx, 30
         call    read_string
         mov     rdi, rax
-        push    rdi
-        call    print_string
-        ;add     rsp,30
 
-        pop     rdi
         cmp     byte[rdi+2], 0
         jne     .word
         mov     al, byte[rdi]
@@ -83,7 +77,6 @@ _start:
         call    print_newline
         mov     rdi, guess
         call    print_string
-        ;call    print_newline
 
         mov     rdi, guess
         mov     rsi, password
@@ -113,9 +106,6 @@ _start:
         call    print_string
 
     call    exit
-
-
-        
 
 
 check:
@@ -164,9 +154,5 @@ check_word:
     ret
 
 
-
 ;to-do
-;see if i can fix the overflow thing when entering a string >30btyes
 ;fix the lib thing so i have my asm lib in git
-;add "wrong" to hangman ascii art
-;clean code
