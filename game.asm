@@ -156,6 +156,7 @@ check_word:
 
     .end2:
     xor     rax, rax
+    xor     r8, r8
     ret
 
     .end:
@@ -166,4 +167,6 @@ check_word:
 
 ;to-do
 ;see if i can fix the overflow thing when entering a string >30btyes
-;clean
+;fix the lib thing so i have my asm lib in git
+;add "wrong" to hangman ascii art
+;clean code
